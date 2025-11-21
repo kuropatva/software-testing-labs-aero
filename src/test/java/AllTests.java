@@ -15,10 +15,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class Tests {
+public class AllTests {
 
-    public static String link = "http://127.0.0.1:5000";
-    public static List<String> fields = List.of("flight-number", "airline", "aircraft-type", "departure-time", "arrival-time", "origin", "destination");
+    private static final String link = "http://127.0.0.1:5000";
+    private static final List<String> fields = List.of("flight-number", "airline", "aircraft-type", "departure-time", "arrival-time", "origin", "destination");
+    private static final String username = "controller";
+    private static final String password = "password123";
+
 
     WebDriver driver;
 
@@ -34,19 +37,11 @@ public class Tests {
 
     @Test
     public void login() {
-
-        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
-        driver.get(link);
-        var username = driver.findElement(By.id("username"));
-        var password = driver.findElement(By.id("password"));
-        username.sendKeys("controller");
-        password.sendKeys("password123");
-        driver.findElement(By.id("login-button")).click();
+        login(driver);
         assertTrue(driver.getCurrentUrl().contains("dashboard"));
     }
 
     @Test
-
     public void emergency() {
         login(driver);
         var dialog = driver.findElement(By.id("emergency-dialog"));
@@ -56,7 +51,6 @@ public class Tests {
         wait.until(d -> dialog.isDisplayed());
         var diff = start.until(Instant.now());
         assertTrue(diff.toMillis() <= 500);
-
     }
 
     @Test
@@ -72,12 +66,9 @@ public class Tests {
         var now = oldNow.until(Instant.now()).toMillis();
         assertTrue(now >= 4500);
         assertTrue(now <= 6500);
-
-
     }
 
     @Test
-
     public void checkFields() {
         login(driver);
         click(driver, "new-flight-tab");
@@ -89,7 +80,6 @@ public class Tests {
     }
 
     @Test
-
     public void full() throws InterruptedException {
         login(driver);
         click(driver, "new-flight-tab");
@@ -105,8 +95,8 @@ public class Tests {
         driver.get(link);
         var username = driver.findElement(By.id("username"));
         var password = driver.findElement(By.id("password"));
-        username.sendKeys("controller");
-        password.sendKeys("password123");
+        username.sendKeys(AllTests.username);
+        password.sendKeys(AllTests.password);
         driver.findElement(By.id("login-button")).click();
     }
 
